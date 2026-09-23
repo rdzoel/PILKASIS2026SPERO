@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Pemilihan OSIS SMPN 2 Gringsing</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Roboto,sans-serif; }
+body { background:linear-gradient(135deg,#f0f4ff 0%,#e6ecff 100%); min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:20px; }
+.container { max-width:1200px; width:100%; background:#fff; border-radius:32px; box-shadow:0 20px 40px rgba(0,20,80,.15); padding:40px 30px; margin:20px auto; }
+.header { text-align:center; margin-bottom:30px; }
+.logo-sekolah { max-width:120px; height:auto; margin-bottom:15px; border-radius:12px; }
+h1 { font-size:2.2rem; color:#1a2b5c; margin-bottom:8px; font-weight:700; }
+h1 span { color:#2a5c9a; }
+.subtitle { font-size:1.2rem; color:#4a5a7a; font-weight:500; }
+.btn { display:inline-block; padding:16px 36px; font-size:1.2rem; font-weight:600; border:none; border-radius:60px; cursor:pointer; transition:all .25s ease; text-decoration:none; margin:10px 8px; box-shadow:0 8px 16px rgba(0,0,0,.08); }
+.btn-primary { background:#1a2b5c; color:#fff; }
+.btn-primary:hover { background:#0f1d3f; transform:translateY(-3px); }
+.btn-secondary { background:#eef2fa; color:#1a2b5c; border:2px solid #cdd9f0; }
+.btn-secondary:hover { background:#dde5f5; transform:translateY(-3px); }
+.btn-success { background:#1f7a4c; color:#fff; }
+.btn-success:hover { background:#155f39; transform:translateY(-3px); }
+.btn-danger { background:#b33a3a; color:#fff; }
+.btn-danger:hover { background:#8f2c2c; transform:translateY(-3px); }
+.btn-admin { background:#6a3ab3; color:#fff; }
+.btn-admin:hover { background:#522c8f; transform:translateY(-3px); }
+.btn:disabled { opacity:.5; cursor:not-allowed; transform:none !important; }
+.page { display:none; }
+.page.active { display:block; animation:fadeIn .4s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+.grid-calon { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:28px; margin:30px 0; }
+.card-calon { background:#f9fbff; border-radius:24px; padding:24px 20px; box-shadow:0 8px 20px rgba(0,0,0,.05); border:2px solid #e3e9f5; display:flex; flex-direction:column; }
+.foto-calon { width:100%; max-width:220px; height:auto; border-radius:18px; margin:0 auto 16px; display:block; border:3px solid #fff; box-shadow:0 6px 14px rgba(0,0,0,.1); }
+.card-calon h3 { font-size:1.3rem; color:#1a2b5c; text-align:center; margin-bottom:12px; }
+.visi-misi { font-size:.9rem; color:#2e3f5e; line-height:1.5; text-align:left; }
+.visi-misi strong { color:#1a2b5c; display:block; margin-top:10px; margin-bottom:4px; }
+.visi-misi ul { padding-left:20px; margin-bottom:8px; }
+.form-verifikasi { max-width:480px; margin:30px auto; background:#f9fbff; padding:36px 30px; border-radius:28px; border:2px solid #e3e9f5; text-align:center; }
+.form-verifikasi label { font-weight:600; color:#1a2b5c; display:block; margin-bottom:10px; font-size:1.1rem; }
+.form-verifikasi input { width:100%; padding:16px 20px; font-size:1.1rem; border:2px solid #cdd9f0; border-radius:60px; outline:none; text-align:center; letter-spacing:1px; }
+.form-verifikasi input:focus { border-color:#1a2b5c; box-shadow:0 0 0 4px rgba(26,43,92,.1); }
+.pesan-error { color:#b33a3a; margin-top:14px; font-weight:500; min-height:24px; }
+.voting-box { max-width:700px; margin:0 auto; text-align:center; }
+.info-pemilih { background:#eef2fa; padding:14px 20px; border-radius:60px; display:inline-block; margin-bottom:24px; font-weight:600; color:#1a2b5c; }
+.pilihan-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px; margin:30px 0; }
+.pilihan-card { background:#f9fbff; border:3px solid #e3e9f5; border-radius:20px; padding:16px 12px; cursor:pointer; transition:all .2s; user-select:none; }
+.pilihan-card:hover { border-color:#8fa9d4; background:#f0f5ff; }
+.pilihan-card.selected { border-color:#1a2b5c; background:#e6edff; box-shadow:0 0 0 4px rgba(26,43,92,.15); }
+.pilihan-card img { width:100%; max-width:100px; height:auto; border-radius:14px; margin-bottom:10px; pointer-events:none; }
+.pilihan-card .nama-singkat { font-weight:700; color:#1a2b5c; font-size:1rem; }
+.pilihan-card .nama-lengkap { font-size:.78rem; color:#4a5a7a; margin-top:4px; }
+.rekapan-box { max-width:800px; margin:0 auto; }
+.rekapan-item { background:#f9fbff; border-radius:18px; padding:16px 24px; margin-bottom:14px; border:2px solid #e3e9f5; }
+.rekapan-nama { font-weight:700; color:#1a2b5c; font-size:.95rem; }
+.rekapan-persentase { font-size:1.4rem; font-weight:800; color:#1a2b5c; }
+.progress-bar { width:100%; height:12px; background:#e3e9f5; border-radius:20px; overflow:hidden; margin-top:6px; }
+.progress-fill { height:100%; background:#1a2b5c; border-radius:20px; transition:width .5s ease; }
+.total-suara { text-align:center; margin:24px 0; font-size:1.2rem; color:#1a2b5c; font-weight:600; }
+.footer { text-align:center; margin-top:30px; color:#8a9ab5; font-size:.9rem; }
+.badge-panitia { display:inline-block; background:#6a3ab3; color:#fff; padding:6px 16px; border-radius:60px; font-size:.85rem; font-weight:600; margin-bottom:16px; }
+
+/* Alert sukses */
+.alert-sukses { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0.8); background:#fff; padding:36px 48px; border-radius:24px; box-shadow:0 20px 60px rgba(0,0,0,.3); text-align:center; z-index:9999; opacity:0; pointer-events:none; transition:all .3s ease; border:3px solid #1f7a4c; }
+.alert-sukses.show { opacity:1; transform:translate(-50%,-50%) scale(1); pointer-events:auto; }
+.alert-sukses .icon { font-size:4rem; margin-bottom:12px; }
+.alert-sukses h2 { color:#1f7a4c; margin-bottom:8px; }
+.alert-sukses p { color:#4a5a7a; }
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:9998; display:none; }
+.overlay.show { display:block; }
+
+/* Modal custom */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:10000; display:none; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay.show { display:flex; }
+.modal-box { background:#fff; padding:32px 36px; border-radius:24px; max-width:440px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.3); animation:popIn .25s ease; }
+@keyframes popIn { from{transform:scale(0.85);opacity:0;} to{transform:scale(1);opacity:1;} }
+.modal-box .modal-icon { font-size:3.5rem; margin-bottom:12px; }
+.modal-box h3 { color:#1a2b5c; margin-bottom:10px; font-size:1.35rem; }
+.modal-box p { color:#4a5a7a; margin-bottom:24px; font-size:.95rem; line-height:1.5; }
+.modal-box .modal-btn-group { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+.modal-box .modal-btn { padding:12px 28px; border-radius:60px; border:none; font-size:1rem; font-weight:600; cursor:pointer; transition:all .2s; }
+.modal-btn-batal { background:#eef2fa; color:#1a2b5c; border:2px solid #cdd9f0; }
+.modal-btn-batal:hover { background:#dde5f5; }
+.modal-btn-ok { background:#b33a3a; color:#fff; }
+.modal-btn-ok:hover { background:#8f2c2c; }
+.modal-btn-primary { background:#1a2b5c; color:#fff; }
+.modal-btn-primary:hover { background:#0f1d3f; }
+
+@media (max-width:600px) { .container{padding:24px 16px;} h1{font-size:1.6rem;} .btn{padding:14px 24px; font-size:1rem;} .grid-calon{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<!-- Overlay sukses -->
+<div class="overlay" id="overlay"></div>
+<div class="alert-sukses" id="alertSukses">
+    <div class="icon">✅</div>
+    <h2>Suara Berhasil Dikirim!</h2>
+    <p id="alertPesan">Terima kasih telah memilih.</p>
+</div>
+
+<!-- Modal Konfirmasi Reset -->
+<div class="modal-overlay" id="modalReset">
+    <div class="modal-box">
+        <div class="modal-icon">⚠️</div>
+        <h3>Hapus Semua Data Pemilihan?</h3>
+        <p>Semua suara dan daftar siswa yang sudah memilih akan dihapus permanen. Tindakan ini tidak dapat dibatalkan.</p>
+        <div class="modal-btn-group">
+            <button class="modal-btn modal-btn-batal" onclick="tutupModalReset()">Batal</button>
+            <button class="modal-btn modal-btn-ok" onclick="konfirmasiReset()">Ya, Hapus Semua</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Notifikasi -->
+<div class="modal-overlay" id="modalNotif">
+    <div class="modal-box">
+        <div class="modal-icon" id="notifIcon">✅</div>
+        <h3 id="notifJudul">Berhasil</h3>
+        <p id="notifPesan">Data telah diproses.</p>
+        <div class="modal-btn-group">
+            <button class="modal-btn modal-btn-primary" onclick="tutupModalNotif()">OK</button>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="app">
+
+<!-- ============ HALAMAN 1: IDENTITAS ============ -->
+<div class="page active" id="page-identitas">
+    <div class="header">
+        <img src="https://iili.io/nutUGXn.jpg" alt="Logo SMPN 2 Gringsing" class="logo-sekolah">
+        <h1>PORTAL PEMILIHAN <span>OSIS</span></h1>
+        <p class="subtitle">SMPN 2 GRINGSING</p>
+        <p style="color:#6a7a9a; margin-top:8px;">Pemilihan Ketua dan Wakil Ketua OSIS</p>
+    </div>
+    <div style="text-align:center; margin-top:40px;">
+        <button class="btn btn-primary" onclick="showPage('page-profil')">📋 Calon Ketua dan Wakil Ketua OSIS</button>
+        <button class="btn btn-success" onclick="showPage('page-verifikasi')">🗳️ Mulai Pemilihan</button>
+        <br>
+        <button class="btn btn-admin" onclick="showPage('page-login-panitia')" style="margin-top:20px; font-size:1rem; padding:12px 28px;">🔐 Mode Panitia</button>
+    </div>
+    <div class="footer">Sistem Pemilihan Digital OSIS SMPN 2 Gringsing</div>
+</div>
+
+<!-- ============ HALAMAN 2: PROFIL CALON ============ -->
+<div class="page" id="page-profil">
+    <div class="header">
+        <h1 style="font-size:1.8rem;">Calon Ketua & Wakil Ketua OSIS</h1>
+        <p class="subtitle">SMPN 2 Gringsing</p>
+    </div>
+    <div class="grid-calon">
+        <div class="card-calon">
+            <img src="https://iili.io/nuttszx.png" alt="Calon 1" class="foto-calon">
+            <h3>Calon 1</h3>
+            <p style="text-align:center; font-weight:600; color:#1a2b5c; margin-bottom:10px;">Maisya Putri Aureliya & Aldi Putra Nuryansyah</p>
+            <div class="visi-misi">
+                <strong>Visi:</strong>
+                <ul>
+                    <li>Membentuk karakter pelajar SMPN 2 Gringsing yang sesuai Pancasila dan tujuan pendidikan nasional</li>
+                    <li>Meningkatkan prestasi baik akademik maupun non-akademik</li>
+                    <li>Meningkatkan literasi dan numerasi siswa-siswi SMPN 2 Gringsing</li>
+                    <li>Mampu mewujudkan SMPN 2 Gringsing memiliki lingkungan yang bersih, sehat, nyaman, dan peduli terhadap kelestarian lingkungan</li>
+                </ul>
+                <strong>Misi:</strong>
+                <ul>
+                    <li>Membudidayakan 5S</li>
+                    <li>Menjalankan ibadah dengan konsisten</li>
+                    <li>Mengadakan kelompok belajar untuk membantu siswa yang kurang</li>
+                    <li>Tutor sebaya</li>
+                    <li>Bekerja sama dengan pembina OSIS dan guru</li>
+                    <li>Menghidupkan pojok baca dan mading</li>
+                    <li>Mengadakan kompetisi edukatif</li>
+                    <li>Mengajak seluruh siswa peduli kebersihan</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-calon">
+            <img src="https://iili.io/nuDJJaV.png" alt="Calon 2" class="foto-calon">
+            <h3>Calon 2</h3>
+            <p style="text-align:center; font-weight:600; color:#1a2b5c; margin-bottom:10px;">Hafka Azryan Ufara & Shobuna Yumna Kamaratih</p>
+            <div class="visi-misi">
+                <strong>Visi:</strong>
+                <p>Mewujudkan OSIS yang mendengar semua suara dan merangkul semua siswa tanpa perbedaan serta bergerak bersama untuk memajukan nama SMPN 2 Gringsing.</p>
+                <strong>Misi:</strong>
+                <ul>
+                    <li>Menampung dan menyampaikan inspirasi siswa</li>
+                    <li>Meningkatkan kerjasama antar siswa</li>
+                    <li>Mendukung siswa berprestasi</li>
+                    <li>Menumbuhkan sikap disiplin dan tanggung jawab</li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-calon">
+            <img src="https://iili.io/nuDKmn1.png" alt="Calon 3" class="foto-calon">
+            <h3>Calon 3</h3>
+            <p style="text-align:center; font-weight:600; color:#1a2b5c; margin-bottom:10px;">Septia Chika Callista P & Erlyta Najwa Salsabila</p>
+            <div class="visi-misi">
+                <strong>Visi:</strong>
+                <p>Menunjukkan OSIS SMPN 2 Gringsing sebagai wadah yang aktif, inovatif, dan kreatif dalam menampung kreativitas, inspirasi, dan aspirasi siswa, serta membangun lingkungan sekolah yang berkarakter, berprestasi, dan peduli sesama.</p>
+                <strong>Misi:</strong>
+                <ul>
+                    <li>Menumbuhkan kreativitas dan jiwa kompetitif</li>
+                    <li>Memperkuat arti penting kebersihan</li>
+                    <li>Menanamkan kedisiplinan</li>
+                    <li>Memperkuat kesadaran beragama</li>
+                    <li>Mengaktifkan ekstrakurikuler</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div style="text-align:center; margin-top:20px;">
+        <button class="btn btn-secondary" onclick="showPage('page-identitas')">← Kembali</button>
+        <button class="btn btn-success" onclick="showPage('page-verifikasi')">Mulai Pemilihan →</button>
+    </div>
+</div>
+
+<!-- ============ HALAMAN 3: VERIFIKASI NISN ============ -->
+<div class="page" id="page-verifikasi">
+    <div class="header">
+        <h1 style="font-size:1.8rem;">Verifikasi Siswa</h1>
+        <p class="subtitle">Masukkan NISN Anda</p>
+    </div>
+    <div class="form-verifikasi">
+        <label for="inputNISN">NISN</label>
+        <input type="text" id="inputNISN" placeholder="Contoh: 0126149440" maxlength="15" autocomplete="off" inputmode="numeric">
+        <div class="pesan-error" id="pesanError"></div>
+        <button class="btn btn-primary" onclick="verifikasiNISN()" style="margin-top:20px;">Verifikasi</button>
+        <br>
+        <button class="btn btn-secondary" onclick="showPage('page-identitas')" style="margin-top:10px;">← Kembali</button>
+    </div>
+</div>
+
+<!-- ============ HALAMAN 4: VOTING ============ -->
+<div class="page" id="page-voting">
+    <div class="voting-box">
+        <div class="header">
+            <h1 style="font-size:1.8rem;">Pilih Calon</h1>
+            <p class="subtitle">Ketua & Wakil Ketua OSIS</p>
+        </div>
+        <div class="info-pemilih" id="infoPemilih">Pemilih: -</div>
+        <div class="pilihan-grid" id="pilihanGrid"></div>
+        <button class="btn btn-success" id="btnKirimSuara" onclick="kirimSuara()" disabled>Kirim Suara</button>
+        <br>
+        <button class="btn btn-secondary" onclick="batalVoting()" style="margin-top:10px;">Batal</button>
+    </div>
+</div>
+
+<!-- ============ HALAMAN 5: LOGIN PANITIA ============ -->
+<div class="page" id="page-login-panitia">
+    <div class="header">
+        <h1 style="font-size:1.8rem;">🔐 Login Panitia</h1>
+        <p class="subtitle">Masukkan password untuk mengakses rekapan</p>
+    </div>
+    <div class="form-verifikasi">
+        <label for="inputPassword">Password Panitia</label>
+        <input type="password" id="inputPassword" placeholder="Masukkan password" autocomplete="off">
+        <div class="pesan-error" id="pesanErrorPanitia"></div>
+        <button class="btn btn-admin" onclick="loginPanitia()" style="margin-top:20px;">Login</button>
+        <br>
+        <button class="btn btn-secondary" onclick="showPage('page-identitas')" style="margin-top:10px;">← Kembali</button>
+    </div>
+</div>
+
+<!-- ============ HALAMAN 6: REKAPAN (KHUSUS PANITIA) ============ -->
+<div class="page" id="page-rekapan">
+    <div class="header">
+        <div class="badge-panitia">🔐 MODE PANITIA</div>
+        <h1 style="font-size:1.8rem;">Rekapan Hasil Pemilihan</h1>
+        <p class="subtitle">SMPN 2 Gringsing</p>
+    </div>
+    <div class="rekapan-box" id="rekapanBox"></div>
+    <div style="text-align:center; margin-top:30px;">
+        <button class="btn btn-secondary" onclick="logoutPanitia()">🚪 Logout Panitia</button>
+        <button class="btn btn-danger" onclick="resetData()">🔄 Reset Data Pemilihan</button>
+    </div>
+</div>
+
+</div>
+
+<script>
+/* ================= KONFIGURASI PANITIA ================= */
+const PASSWORD_PANITIA = "spero2026"; // GANTI PASSWORD DI SINI
+
+/* ================= DATA SISWA ================= */
+const dataSiswa = [
+{no:1,nama:"ABDI TRI HARTYYANTO",nisn:"0126149440"},
+{no:2,nama:"ABDUL RAHMAN FAHRI",nisn:"3145346934"},
+{no:3,nama:"ABIDZA FADHILA",nisn:"0136541421"},
+{no:4,nama:"Adam Ilham Irwansyah",nisn:"0124729764"},
+{no:5,nama:"ADDIKRA KHASBI IKHSANI",nisn:"0139212658"},
+{no:6,nama:"ADE KURNIA RAMANDHANI",nisn:"0114846808"},
+{no:7,nama:"ADHIBA ADELIYA PUTRI",nisn:"3136325545"},
+{no:8,nama:"ADI AL BUKHORI",nisn:"0131384363"},
+{no:9,nama:"ADI PRASETIO",nisn:"3135009071"},
+{no:10,nama:"ADI SANTOSO",nisn:"0125962185"},
+{no:11,nama:"ADIBA FAKHIRA ANASTASYA PUTRI",nisn:"0144077626"},
+{no:12,nama:"ADIBA KHANZA HUMAIRA",nisn:"3140146164"},
+{no:13,nama:"Adinata Satrio Wibowo",nisn:"0138683447"},
+{no:14,nama:"Adinda Putri Rahmadhani",nisn:"0114282591"},
+{no:15,nama:"ADINKA LIONY FRANCISKA",nisn:"0127831655"},
+{no:16,nama:"ADITYA CANDRAWINATA",nisn:"3135084413"},
+{no:17,nama:"ADITYA DAFFA AINURROHMAN",nisn:"0134721366"},
+{no:18,nama:"ADLI RAISA ALVARO",nisn:"0114384284"},
+{no:19,nama:"AELKE SYAFIRA",nisn:"3131604265"},
+{no:20,nama:"AERIL YUMARIVKA",nisn:"0141758674"},
+{no:21,nama:"AFGIAN ISNA RAMADHANI",nisn:"0116320552"},
+{no:22,nama:"AFIKA NUR FADILAH",nisn:"0124349726"},
+{no:23,nama:"AFIKAH NABILLA AZALIA",nisn:"0122658775"},
+{no:24,nama:"AFRIDA CAHYA NINGTYAS",nisn:"3124294050"},
+{no:25,nama:"AGUS ADI SAPUTRA",nisn:"3128709291"},
+{no:26,nama:"Ahmad",nisn:"3132875974"},
+{no:27,nama:"AHMAD ALVIN SETYAWAN",nisn:"3131631106"},
+{no:28,nama:"AHMAD AMRU MALIK",nisn:"3138280248"},
+{no:29,nama:"AHMAD ANDIFAN",nisn:"0123030266"},
+{no:30,nama:"Ahmad Arsadani",nisn:"0123495211"},
+{no:31,nama:"AHMAD ELFIN PRASETYO",nisn:"3145206558"},
+{no:32,nama:"AHMAD FAHROZI",nisn:"3131206654"},
+{no:33,nama:"AHMAD KHANIF MAULANA",nisn:"3129494205"},
+{no:34,nama:"Ahmad Khanif Syafiudin",nisn:"0139391145"},
+{no:35,nama:"AHMAD KHILMI",nisn:"3145527794"},
+{no:36,nama:"Ahmad Nur Hidayat",nisn:"0122615961"},
+{no:37,nama:"AHMAD NURUL FURQON",nisn:"3140482362"},
+{no:38,nama:"AHMAD RIFQI ADITIA",nisn:"0137006311"},
+{no:39,nama:"AHMAD RIZKI",nisn:"3118053130"},
+{no:40,nama:"AHMAD ZIDAN AZIZI",nisn:"3127489183"},
+{no:41,nama:"AILA KINARA ARYLISIA",nisn:"0143545228"},
+{no:42,nama:"AINUL WAFA",nisn:"3129293497"},
+{no:43,nama:"AISHA ADZKIATUNNISA",nisn:"0122671389"},
+{no:44,nama:"AKHMAD FARIS MAULANA",nisn:"3138348804"},
+{no:45,nama:"Akhmad khoirul rizal",nisn:"0135598817"},
+{no:46,nama:"AKHMAL DZUL FAKHRI",nisn:"3145153297"},
+{no:47,nama:"AKIFA NAYLA",nisn:"3136974176"},
+{no:48,nama:"AL'GHANY LEVYSSHON",nisn:"0125518430"},
+{no:49,nama:"AL SYAQAJ MULYO SANTOSO",nisn:"0124239973"},
+{no:50,nama:"ALBY AQILA AL FACHRI",nisn:"0132163160"},
+{no:51,nama:"ALDI PUTRA NURYANSYAH",nisn:"0133009588"},
+{no:52,nama:"ALDI VALENT SETIAWAN",nisn:"0122141367"},
+{no:53,nama:"Alfa Ahsanul Khuluq",nisn:"0111605577"},
+{no:54,nama:"ALVANO BAYU PRATAMA",nisn:"0143340515"},
+{no:55,nama:"ALYA ADRIANI PUTRI",nisn:"0117798573"},
+{no:56,nama:"ALYA PUTRI RAMADHANI",nisn:"3123478242"},
+{no:57,nama:"AMANDA DEAGITA KAMILA",nisn:"0117288986"},
+{no:58,nama:"AN NAJWA RAMADHANI",nisn:"0137696596"},
+{no:59,nama:"Ana Sulistiowati",nisn:"3133795670"},
+{no:60,nama:"ANANDA HARY SAPUTRA",nisn:"3156432342"},
+{no:61,nama:"Ananda Septiyan Nareswara",nisn:"0113961611"},
+{no:62,nama:"ANDIKA GILANG PRASETYA",nisn:"0113865682"},
+{no:63,nama:"ANDRIANA BIKRUN NABILAH",nisn:"0121082582"},
+{no:64,nama:"Angelina Safitri",nisn:"0122592057"},
+{no:65,nama:"ANISA ALVIA SAFITRI",nisn:"0121151840"},
+{no:66,nama:"ANISA FANDIYAH SARI",nisn:"0132867631"},
+{no:67,nama:"ANZIL BINA RAHMA ZAY",nisn:"0132714908"},
+{no:68,nama:"AQILA FARANISA ISHANA",nisn:"3133599130"},
+{no:69,nama:"ARABELLA FARHANA",nisn:"3125118533"},
+{no:70,nama:"ARADITHA DZIKIRA SAKHI",nisn:"3148181319"},
+{no:71,nama:"Arif Narendra Pratama",nisn:"0144238942"},
+{no:72,nama:"ARIF PRAYOGA",nisn:"3123455661"},
+{no:73,nama:"ARIN AYURA",nisn:"3131322711"},
+{no:74,nama:"ARIQA NUR FATINA",nisn:"0149033708"},
+{no:75,nama:"ARJA MUSTAQIM",nisn:"0133483006"},
+{no:76,nama:"ARJUNA PRATAMA",nisn:"0102046721"},
+{no:77,nama:"ARSYANIA HILMA ABDILLAH",nisn:"3145702998"},
+{no:78,nama:"ASKA MUHAMAD RAMDANI",nisn:"3126898987"},
+{no:79,nama:"ATIQOH TRI HASNA",nisn:"0123024353"},
+{no:80,nama:"AVRINA SHIFANIA SOLECHA",nisn:"0124869425"},
+{no:81,nama:"AZAHWA AMARA MAULIDA H",nisn:"3138591101"},
+{no:82,nama:"Azalea Naura Quentin",nisn:"0143415683"},
+{no:83,nama:"AZZA ARYA DEWANGGA",nisn:"3126587083"},
+{no:84,nama:"BAGAS FEBRI ERWANTO",nisn:"3127745869"},
+{no:85,nama:"BAGAS OCTA MAULANA",nisn:"3137731731"},
+{no:86,nama:"BAGUS DWI LAKSANA",nisn:"3131633806"},
+{no:87,nama:"BAGUS SATRIA",nisn:"0148479177"},
+{no:88,nama:"BASTIAN ANANDA YOGATAMA",nisn:"0131586822"},
+{no:89,nama:"BELVA APRILIA NAJLA",nisn:"0147410073"},
+{no:90,nama:"BHIYAN ARSHI ISWANTARA",nisn:"0131327775"},
+{no:91,nama:"BILLY YULIAN",nisn:"0126528073"},
+{no:92,nama:"BIYAN RAHMAT AL FAJRI",nisn:"0135586774"},
+{no:93,nama:"BRILLIANT YUDHA PRATAMA",nisn:"0136915041"},
+{no:94,nama:"CAHANA SRI WAHYUNINGSIH",nisn:"0137328079"},
+{no:95,nama:"Cahaya Rinjani Putri",nisn:"0141144753"},
+{no:96,nama:"Chelsea Putry Ananda",nisn:"0133923365"},
+{no:97,nama:"CHINDY NOVITA ANGGRAINI",nisn:"3133131887"},
+{no:98,nama:"Chrisye Bramantyo Arief",nisn:"3139908717"},
+{no:99,nama:"DAFA MUHAMAD IHSAN",nisn:"0129290572"},
+{no:100,nama:"DAFFA AMMANULLAH",nisn:"3127130032"},
+{no:101,nama:"DAFFA ANELKA YUDISTIRA",nisn:"0125540629"},
+{no:102,nama:"David Rivano Rafael",nisn:"0135157387"},
+{no:103,nama:"DEEHAN YUDHISTIRA MUSTHOFA",nisn:"0124120769"},
+{no:104,nama:"DELFIN OKTAVIAN",nisn:"0127441716"},
+{no:105,nama:"DELLIA FATIN SIDQIA",nisn:"0133561163"},
+{no:106,nama:"DEVAN GAVRIEL RAFANSYAH",nisn:"3142216846"},
+{no:107,nama:"DEVITA OLIFIA",nisn:"0112758209"},
+{no:108,nama:"DEWI AISYAH AZZAHRA",nisn:"0132282254"},
+{no:109,nama:"DIANDRA AVRIL NOAH SIREGAR",nisn:"0126065492"},
+{no:110,nama:"DIAS ARMADHANI",nisn:"3132912815"},
+{no:111,nama:"Diaz Riska Alfadli",nisn:"0116131437"},
+{no:112,nama:"DIKI SAPUTRA",nisn:"0127516763"},
+{no:113,nama:"DIKY ALDIANO",nisn:"0116829442"},
+{no:114,nama:"DIMAS ADITYA RIZKI WARDHANA",nisn:"0131493214"},
+{no:115,nama:"Dimas Zaki Saputra",nisn:"3125659323"},
+{no:116,nama:"DINA PUTRI AZZAHRA",nisn:"0136189147"},
+{no:117,nama:"DINAR INGGIL PRAMESTI",nisn:"0139665459"},
+{no:118,nama:"DINI ANIZHA PUTRI",nisn:"0134218879"},
+{no:119,nama:"DISKA VANTIKA ANGGRAINI",nisn:"0129593775"},
+{no:120,nama:"DIVA TASYA ANGGRAENI",nisn:"0124030454"},
+{no:121,nama:"DONI DWI SETIAWAN",nisn:"0141466562"},
+{no:122,nama:"Duwi Noviyana",nisn:"0118438088"},
+{no:123,nama:"DWI AHMAD ADITIYA RASYID",nisn:"0135061443"},
+{no:124,nama:"DWI ANIZA APRILIA",nisn:"0146970900"},
+{no:125,nama:"DWI FEBRI HANDAYANI",nisn:"3122397593"},
+{no:126,nama:"DWI FEBRI HANDAYANTI",nisn:"3129929412"},
+{no:127,nama:"ELIZA RENIER DWI AURELIA",nisn:"3123109734"},
+{no:128,nama:"ELIZHA YESI AMELLIYA",nisn:"0121440741"},
+{no:129,nama:"ELSA SEPTIANA PUTRI",nisn:"3134495347"},
+{no:130,nama:"ERIKA ISTI PERMATA SARI",nisn:"0134686894"},
+{no:131,nama:"ERILLA FAZHA FAREHA",nisn:"0147540819"},
+{no:132,nama:"Erlyta Najwa Salsabila",nisn:"0142154623"},
+{no:133,nama:"EVELYN ANASTASYA",nisn:"0123957332"},
+{no:134,nama:"FADHILAH RIZKY",nisn:"0123941591"},
+{no:135,nama:"Fadil Faesya Rahman",nisn:"0132912381"},
+{no:136,nama:"FADILA NURUL APRILIANI",nisn:"3123513442"},
+{no:137,nama:"FAEYZA AHMAD RAZIQ",nisn:"3121954998"},
+{no:138,nama:"FAHRIZ IMAMUL HAKIM",nisn:"0136350317"},
+{no:139,nama:"FAIS FADHIL",nisn:"3118922241"},
+{no:140,nama:"FAJAR ARIFFUDIN",nisn:"3144674721"},
+{no:141,nama:"FAKHRIE ZHAFRAN KHAIRY",nisn:"0149277587"},
+{no:142,nama:"FANDA TRI NOVIYANTI",nisn:"3120955469"},
+{no:143,nama:"Fardan Al Syaahir",nisn:"3136707128"},
+{no:144,nama:"FAREL PUTRA PRATAMA",nisn:"3131273270"},
+{no:145,nama:"FAREZA CANDRA MULYA",nisn:"3131684276"},
+{no:146,nama:"FARIZ NUR HAKIM",nisn:"0124804890"},
+{no:147,nama:"FARIZKI KHOIRULLIAN",nisn:"0136810137"},
+{no:148,nama:"FARREL EKA PUTRA ANDRIANSYAH",nisn:"0124657641"},
+{no:149,nama:"FARZANA AYUNINDYA ELSA WIBOWO",nisn:"0125754744"},
+{no:150,nama:"FASTABIQUL KHAIROT",nisn:"0139277361"},
+{no:151,nama:"FATHIR ALFAN ARSYAFIN",nisn:"0113168043"},
+{no:152,nama:"FATTINAH INAYAH",nisn:"3145549380"},
+{no:153,nama:"FATWA YUDISTIAN",nisn:"3128458599"},
+{no:154,nama:"FAUZAN MAULANA",nisn:"3125760729"},
+{no:155,nama:"FAZA SEPTA ARLIANSYAH",nisn:"0113686905"},
+{no:156,nama:"FEBRIANA NUR ASRIDA",nisn:"0138891374"},
+{no:157,nama:"Febrina Zahra",nisn:"0143909907"},
+{no:158,nama:"FELLY ANA OKTAVIA",nisn:"0137802123"},
+{no:159,nama:"firdaus tri andika",nisn:"0122240763"},
+{no:160,nama:"FIRLINA DAMAYANTI",nisn:"0129280682"},
+{no:161,nama:"FITRA ALDIANSYAH PUTRA",nisn:"0117333259"},
+{no:162,nama:"Fredy Cahyo Alam",nisn:"0124167203"},
+{no:163,nama:"FRISKA HIBATUL WAFIROH",nisn:"3136134526"},
+{no:164,nama:"GALIH PAMBUDI",nisn:"0113548811"},
+{no:165,nama:"GALIH RAMADHAN",nisn:"0129509870"},
+{no:166,nama:"GHOZY BASYAYEF",nisn:"0146473822"},
+{no:167,nama:"GILANG ZAPUTRA",nisn:"0119626269"},
+{no:168,nama:"GITA AULIA SETIANI",nisn:"0117426052"},
+{no:169,nama:"GITA OKTAVIANI",nisn:"3131708509"},
+{no:170,nama:"GRESIA PUTRI SETYANINGSIH",nisn:"3122839464"},
+{no:171,nama:"GUSTIAN AKBAR PRATAMA",nisn:"0133027827"},
+{no:172,nama:"HAFIZH SEPTIYAN HABIBIE",nisn:"0115496060"},
+{no:173,nama:"HAFKA AZRYAN UFARA",nisn:"3112158564"},
+{no:174,nama:"HANA UYUNIL A'IZZAH",nisn:"0123271907"},
+{no:175,nama:"HANDIK FIRMANSYAH",nisn:"0128658663"},
+{no:176,nama:"HASNA NABILA HARYANTO",nisn:"0139745959"},
+{no:177,nama:"HENDRA RIZQI ARYAGUNA",nisn:"0115029826"},
+{no:178,nama:"HENDRIANSAH",nisn:"0123856689"},
+{no:179,nama:"HIRZUL MUAFFA",nisn:"0122844385"},
+{no:180,nama:"HONOTRISULO ABUCHOER",nisn:"0137916491"},
+{no:181,nama:"HUMAIRA HASNATUL JINAN",nisn:"0122475657"},
+{no:182,nama:"IBNI DZAKI BAHTIAR",nisn:"3123437676"},
+{no:183,nama:"IBNU HARDIAN KUSUMA",nisn:"0132508310"},
+{no:184,nama:"IBNU SHINA ARDIYANSYAH",nisn:"0112858620"},
+{no:185,nama:"IBRA MAULANA WIDIAWAN",nisn:"0147739632"},
+{no:186,nama:"IBRANI MUHAMMAD",nisn:"0145766489"},
+{no:187,nama:"Ifra Meutia Arief",nisn:"3119541283"},
+{no:188,nama:"INDHIRA MAY NOVI ZULIANTY",nisn:"3133721711"},
+{no:189,nama:"INTAN SILVIANA SAFITRI",nisn:"0128280889"},
+{no:190,nama:"Iqbal Saputra",nisn:"3138256810"},
+{no:191,nama:"ISNAINI AZIZ ZULAIKHA",nisn:"0115115618"},
+{no:192,nama:"IVAN ARIZKY",nisn:"0137356272"},
+{no:193,nama:"IZZA HILYA NAFISAH",nisn:"0148363518"},
+{no:194,nama:"Jelita Puspita Ningrum",nisn:"3126730138"},
+{no:195,nama:"JULIA EKA ROMADHONI",nisn:"0134683984"},
+{no:196,nama:"JULIAN FIRSYAM HERMAWAN",nisn:"3132601048"},
+{no:197,nama:"JUNDI MUHAMMAD MUJTABA",nisn:"0123632103"},
+{no:198,nama:"KAFI RIJAL TRYSTAN",nisn:"3132896927"},
+{no:199,nama:"KARTINI DEWI SUSANTI",nisn:"0125380738"},
+{no:200,nama:"KASIH REBORA",nisn:"3137982850"},
+{no:201,nama:"KAYLA ANDITA KIRANA ZAHRATUSSITA",nisn:"0131302036"},
+{no:202,nama:"KEFIN FEBRIAN SYAH",nisn:"0143889385"},
+{no:203,nama:"KELVIN ADITIYA SAPUTRA",nisn:"0129586373"},
+{no:204,nama:"KELVIN ARDI DEHANDOYO",nisn:"0127775602"},
+{no:205,nama:"KENZIE ALDEBARAN",nisn:"0125485876"},
+{no:206,nama:"KENZIE ALTAF SAUQI ABDILLAH",nisn:"0129059700"},
+{no:207,nama:"KEVIN ARAHMAT ALFAROBI",nisn:"0136513444"},
+{no:208,nama:"Keyla Kezya Qinasih",nisn:"3131251342"},
+{no:209,nama:"KHAFIYYATUL MU'AMMILAH",nisn:"3119203480"},
+{no:210,nama:"KHALIDA CORDELIA FADHILAH",nisn:"0104206729"},
+{no:211,nama:"Khili Hatun Nisa",nisn:"0123938902"},
+{no:212,nama:"KRISNA FIRMANSYAH",nisn:"0121728441"},
+{no:213,nama:"LAILI SEPTINA",nisn:"3135082282"},
+{no:214,nama:"Lintang Alea Avara Putri",nisn:"3125767248"},
+{no:215,nama:"LINTANG AYU SHAFIRA",nisn:"0146394864"},
+{no:216,nama:"LINTANG KISTIA PRABA",nisn:"3122508973"},
+{no:217,nama:"LUCKI ELMANA",nisn:"0118213211"},
+{no:218,nama:"LUKITO ASNAN GHOZALI",nisn:"0125958408"},
+{no:219,nama:"LULUK MAULIDA AZ ZAHRA",nisn:"0131299010"},
+{no:220,nama:"LUTFI CAHYA TRI KUSUMA",nisn:"0114512079"},
+{no:221,nama:"M. FARREL RIZQI",nisn:"0138277860"},
+{no:222,nama:"MAHENDRA ARMAN SYAHPUTRA",nisn:"0125075926"},
+{no:223,nama:"MAHESA FEBRIANTARA WIBOWO",nisn:"0149177644"},
+{no:224,nama:"MAILA ALYYA SAFITRI",nisn:"3133109680"},
+{no:225,nama:"MAISYA PUTRI AURELIYA",nisn:"0131641093"},
+{no:226,nama:"MALIKA NAYLA PUTRI",nisn:"0149427831"},
+{no:227,nama:"MASRUROTUL MA'WA",nisn:"3126029656"},
+{no:228,nama:"MAULIDYA ZASKIA",nisn:"0116043914"},
+{no:229,nama:"MAYFIN ANNAZ SAPUTRA",nisn:"0133643688"},
+{no:230,nama:"Meka Hafifah Setiasih",nisn:"3134607329"},
+{no:231,nama:"MELSY ADHAYA MAHARANI",nisn:"3121417091"},
+{no:232,nama:"Meysila Putri Azahra",nisn:"3137222971"},
+{no:233,nama:"MILA MINHATUL MAULA",nisn:"3134920016"},
+{no:234,nama:"MOURA KINASIH HAYUNING KEDATON",nisn:"0142963431"},
+{no:235,nama:"MUHAMAD ARDIKA ZAKHWAN",nisn:"0137446563"},
+{no:236,nama:"MUHAMAD HIDAYATUS SOLIHIN",nisn:"3137394137"},
+{no:237,nama:"MUHAMAD RAFA FERDIANSYAH",nisn:"3111006150"},
+{no:238,nama:"MUHAMAD RIF'AN LITANJUA",nisn:"0119585995"},
+{no:239,nama:"MUHAMAD RIZKI ADITYA",nisn:"0138165958"},
+{no:240,nama:"MUHAMAD SHAKIRUL HUDA",nisn:"0114790302"},
+{no:241,nama:"MUHAMAD YAZID AL BUSTOMI",nisn:"3120401528"},
+{no:242,nama:"MUHAMAD YUAN FALA",nisn:"0121099540"},
+{no:243,nama:"MUHAMMAD ABDUL RASYID",nisn:"0135506299"},
+{no:244,nama:"MUHAMMAD AHSAN ADIANSYAH",nisn:"3112421615"},
+{no:245,nama:"MUHAMMAD ALFIN AGUSTIAN",nisn:"0137962157"},
+{no:246,nama:"MUHAMMAD ALI MURTADHO",nisn:"3125292990"},
+{no:247,nama:"MUHAMMAD ALIFATUR IRSYADI BAGAS",nisn:"3133484171"},
+{no:248,nama:"MUHAMMAD ARIF SETIAWAN",nisn:"0135768259"},
+{no:249,nama:"MUHAMMAD DANA SYARIF YUSUF",nisn:"0135064341"},
+{no:250,nama:"MUHAMMAD DAVID MAULANA",nisn:"0147976645"},
+{no:251,nama:"MUHAMMAD DWI PRASETYO",nisn:"3136563204"},
+{no:252,nama:"MUHAMMAD ERICK SETYAWAN",nisn:"3141603000"},
+{no:253,nama:"MUHAMMAD FADHIL",nisn:"0121853321"},
+{no:254,nama:"MUHAMMAD FAQIH ZIDDAN",nisn:"3144175481"},
+{no:255,nama:"MUHAMMAD FAREL FAHREZA",nisn:"3135910941"},
+{no:256,nama:"MUHAMMAD FARIS SABRI",nisn:"3111004729"},
+{no:257,nama:"Muhammad Fernando Saputra",nisn:"3132730349"},
+{no:258,nama:"MUHAMMAD FUAD HANDIG",nisn:"3129729363"},
+{no:259,nama:"MUHAMMAD GALLIH SAPUTRA",nisn:"0126366807"},
+{no:260,nama:"MUHAMMAD HAIKAL",nisn:"3113973121"},
+{no:261,nama:"MUHAMMAD IRCHAM IBRAHIM",nisn:"0129025596"},
+{no:262,nama:"MUHAMMAD IZAM SAPUTRA",nisn:"3147853461"},
+{no:263,nama:"MUHAMMAD MAULANA SAPUTRA",nisn:"3125223127"},
+{no:264,nama:"MUHAMMAD MU'IZUN NUHA",nisn:"3128438407"},
+{no:265,nama:"Muhammad Raehan",nisn:"3133250514"},
+{no:266,nama:"MUHAMMAD RIEZAL ALFIANSYAH",nisn:"0148174790"},
+{no:267,nama:"Muhammad Rizal AL Fallah",nisn:"0137128239"},
+{no:268,nama:"MUHAMMAD RIZKI ARDIYANTO",nisn:"3123389063"},
+{no:269,nama:"Muhammad Rizky Jannata Firdaus",nisn:"0113617241"},
+{no:270,nama:"MUHAMMAD RIZQY SAPUTRA",nisn:"0112580587"},
+{no:271,nama:"MUHAMMAD VIRZA NUR HIDAYATULLOH",nisn:"3142612994"},
+{no:272,nama:"MUHAMMAD WAHYU RAMADHAN",nisn:"3122765886"},
+{no:273,nama:"MUHAMMAD ZAKA AMRU YAHYA",nisn:"3128841615"},
+{no:274,nama:"MUHAMMAD ZIA UL HAQ",nisn:"0125237132"},
+{no:275,nama:"MUHAMMAD ZULFIKAR AZKA",nisn:"3114907194"},
+{no:276,nama:"MUHSINUL AFINI",nisn:"0117354898"},
+{no:277,nama:"MUKHAMAD KHOIRUN NASTA'IN",nisn:"0111682348"},
+{no:278,nama:"NABILA ALYA KHOIRUNNISA",nisn:"0136316983"},
+{no:279,nama:"NABILLA ABSHARINA",nisn:"0119195198"},
+{no:280,nama:"NADIA WULANSARI",nisn:"3137388514"},
+{no:281,nama:"NADIFA NADA AFTANI",nisn:"0117949378"},
+{no:282,nama:"Nadine Qyara Maheswari",nisn:"3139073038"},
+{no:283,nama:"NADINE VIONELA RAMADHANI",nisn:"3146211559"},
+{no:284,nama:"NADIYA MAULIDA HASNA",nisn:"0143921164"},
+{no:285,nama:"NADIYYA NAFIATUL MAKHYA",nisn:"0147267841"},
+{no:286,nama:"NAFISATUL LATIFA AL AGNI",nisn:"3134329436"},
+{no:287,nama:"naila vianandita",nisn:"0125496441"},
+{no:288,nama:"NAKEISHA SAKHI",nisn:"3135863224"},
+{no:289,nama:"NASYWA MAULIDAH RISTANTI",nisn:"0135704366"},
+{no:290,nama:"NASYWAN NAUFA ARDANIS",nisn:"0116884694"},
+{no:291,nama:"NATASYA DWI MUTIARA",nisn:"0113791329"},
+{no:292,nama:"NAUFAL ABDUL RAFIF",nisn:"0143940135"},
+{no:293,nama:"NAUFAL DAVIT HADI NURYANTO",nisn:"0135947358"},
+{no:294,nama:"NAUFAL HAFIDH ALFARIQ",nisn:"0133080568"},
+{no:295,nama:"NAUFAL KHANSA GUSTIAR",nisn:"3139870284"},
+{no:296,nama:"Naura Alya Kirana",nisn:"0132220653"},
+{no:297,nama:"NAUVAL AFKAR",nisn:"3147470795"},
+{no:298,nama:"NAYAHRA AUBERTA MAHESTRI",nisn:"3128612435"},
+{no:299,nama:"NAYLA ERRA FAZIRA",nisn:"0136376738"},
+{no:300,nama:"NAYLA SYAFITRI",nisn:"0146563538"},
+{no:301,nama:"Nazwa Andini",nisn:"0126188465"},
+{no:302,nama:"NELSI DARMAYANTI",nisn:"0112901654"},
+{no:303,nama:"NENDI DUWI ADITTIA",nisn:"0127305149"},
+{no:304,nama:"NENG WULAN NURUL PADILA",nisn:"0115156281"},
+{no:305,nama:"NOPI NUR AZIZZAH",nisn:"0118587646"},
+{no:306,nama:"NOUVAL PRASETYA",nisn:"3132480713"},
+{no:307,nama:"NOVITA TRI NURHIDAYAH",nisn:"3104994579"},
+{no:308,nama:"NUGI RIZKY SAPUTRA",nisn:"0115115640"},
+{no:309,nama:"NUR AINI",nisn:"3126648186"},
+{no:310,nama:"NUR AINI",nisn:"0124060471"},
+{no:311,nama:"NURY MAULIANA",nisn:"0142863789"},
+{no:312,nama:"OKA DWI SAPUTRA",nisn:"0117653999"},
+{no:313,nama:"PUTRA ABI MAULANA",nisn:"3144439102"},
+{no:314,nama:"PUTRI ALVINA",nisn:"0139707464"},
+{no:315,nama:"PUTRI APRILIA",nisn:"0149821965"},
+{no:316,nama:"Putri Wulandari",nisn:"0123743239"},
+{no:317,nama:"QAISYA SAYYIDAH NAFISHA NUR ISKANDAR",nisn:"0156491695"},
+{no:318,nama:"QINAR ASIFA DWI",nisn:"0144917224"},
+{no:319,nama:"RADHITYA ALLIFFIANTO",nisn:"0098586908"},
+{no:320,nama:"RAFA FAJAROTUNNAJIB",nisn:"0112372779"},
+{no:321,nama:"RAFAEL GALANG SAPUTRA",nisn:"3135389357"},
+{no:322,nama:"RAFI KURNIA MAULIDIANTO",nisn:"3140790074"},
+{no:323,nama:"Rafka yusuf anugrah",nisn:"0141856886"},
+{no:324,nama:"RAGIL PRABOWO",nisn:"0129968487"},
+{no:325,nama:"Rahma Ayu Wulandari",nisn:"0128649878"},
+{no:326,nama:"RAHMAT PUTRA WIJAKSONO",nisn:"0127997133"},
+{no:327,nama:"RAHMAWATI",nisn:"0128336246"},
+{no:328,nama:"RAIHAN BAGAS ANDRAKAYANA",nisn:"0134499220"},
+{no:329,nama:"RAMA HENDRIYANTO",nisn:"0129722065"},
+{no:330,nama:"RANDHIKA BONI SYAHPUTRA",nisn:"0138555787"},
+{no:331,nama:"RANGGA DWI PERMANA",nisn:"0138392221"},
+{no:332,nama:"RAYCHAN JAZA AL-AUFA",nisn:"3120692683"},
+{no:333,nama:"REFY ANDRIYANSYAH",nisn:"3139398765"},
+{no:334,nama:"REGA ADI SAPUTRA",nisn:"0124997697"},
+{no:335,nama:"RENDY FABRIZIO PRATAMA",nisn:"0136395042"},
+{no:336,nama:"RESTU KURNIAWAN",nisn:"3112523328"},
+{no:337,nama:"REYNDRAWATI",nisn:"0124743507"},
+{no:338,nama:"REZA FIRDIANSYAH",nisn:"0121195627"},
+{no:339,nama:"RHAJES ABDULLAH",nisn:"0117793199"},
+{no:340,nama:"RIDWAN BUDIONO",nisn:"3129188151"},
+{no:341,nama:"RIFA PUJIANTO",nisn:"0118138099"},
+{no:342,nama:"RIFKI APRIANSYAH",nisn:"0117508297"},
+{no:343,nama:"RIFQOTUL LABIBATUZ ZAHRA'",nisn:"0125711194"},
+{no:344,nama:"RIKO GALEH JUNIKO HERMAWAN",nisn:"3139581179"},
+{no:345,nama:"RINO ZAKI IMANULLAH",nisn:"3134495685"},
+{no:346,nama:"RIRIN FEBRIANI",nisn:"0125923122"},
+{no:347,nama:"RISKY ADITIYA",nisn:"0124338025"},
+{no:348,nama:"RIVANNO EGA PRATAMA",nisn:"0132131407"},
+{no:349,nama:"RIZKY FAID KHUSAIN",nisn:"0117470004"},
+{no:350,nama:"Rohit Dwianto",nisn:"0133301296"},
+{no:351,nama:"RONI FADILLA",nisn:"0124817403"},
+{no:352,nama:"Ryvano Pratama",nisn:"0148615437"},
+{no:353,nama:"SADIQ NAUFAL RIZQI",nisn:"0134123736"},
+{no:354,nama:"SADIQNA AINUN MAHYA",nisn:"0139950267"},
+{no:355,nama:"SAFINA AULIA RAHMADANI",nisn:"0113390354"},
+{no:356,nama:"SAFIRA SALSABILA ZULFA",nisn:"3127011505"},
+{no:357,nama:"SAKHI NABIHAN AHNAF",nisn:"0139940185"},
+{no:358,nama:"SALSABILA NADHIFA AQILAH",nisn:"3125659563"},
+{no:359,nama:"SASQIA YULIANI",nisn:"0124310548"},
+{no:360,nama:"SATRIA MAULANA JUMANTORO",nisn:"0136102358"},
+{no:361,nama:"SATYA CANDRA KUSUMA",nisn:"0146461808"},
+{no:362,nama:"SELVI NILAM PUSPITA",nisn:"0113543029"},
+{no:363,nama:"SEPTIA CHIKA CALISTA PUTRI",nisn:"3136468488"},
+{no:364,nama:"SEPTIA NUR AQILAH",nisn:"0121909119"},
+{no:365,nama:"SHAQILA ALZAHRA SINGARIMBUN",nisn:"3136444472"},
+{no:366,nama:"SHOBUNA YUMNA KAMARATIH",nisn:"3135397874"},
+{no:367,nama:"SHOFIYAH",nisn:"0119914969"},
+{no:368,nama:"Siva Prameswari",nisn:"0129710836"},
+{no:369,nama:"SONIA PUTRI ANASTASYA",nisn:"0133563026"},
+{no:370,nama:"Syifa Ayu Meylani",nisn:"0138673944"},
+{no:371,nama:"TALIA FITRI AGUSTINA",nisn:"0139336620"},
+{no:372,nama:"TEGAR PRIAMBODO",nisn:"0131581665"},
+{no:373,nama:"TIARA AULIA NISA",nisn:"3144807093"},
+{no:374,nama:"TIKA RIZKIANA",nisn:"0121180142"},
+{no:375,nama:"TIRTA NUR ZAMMI",nisn:"3138229405"},
+{no:376,nama:"TITO FEBRIANSYAH",nisn:"0139935863"},
+{no:377,nama:"ULUL ALBAB",nisn:"3129114514"},
+{no:378,nama:"VATRIH WINDHA WARDANA",nisn:"0111153837"},
+{no:379,nama:"VESYA DWI ANGELINA PUTRI",nisn:"0144349645"},
+{no:380,nama:"VIIALLEN CANESSA WULANDARI",nisn:"0139386378"},
+{no:381,nama:"VIVIA MEILAVITA",nisn:"0131386684"},
+{no:382,nama:"Vrisca Maulinatul Asha",nisn:"0124099334"},
+{no:383,nama:"WAHYU ALIFIAN",nisn:"3136311842"},
+{no:384,nama:"WAHYU PUTRA AFIANTO",nisn:"0142483649"},
+{no:385,nama:"Widya Ayu Solikha",nisn:"3124212711"},
+{no:386,nama:"WILSA AYUDIA HANDAYANI",nisn:"0118357537"},
+{no:387,nama:"WONNY SULISTIYOWATI",nisn:"0123064407"},
+{no:388,nama:"YUANDA FIRAZ KURNIAWAN",nisn:"0124308415"},
+{no:389,nama:"YUINU AVIO FAREL",nisn:"0145580185"},
+{no:390,nama:"YULIA AMANDA",nisn:"0125288034"},
+{no:391,nama:"ZAHRA KURNIA",nisn:"3138644160"},
+{no:392,nama:"ZAIDA AFNY HUMAYYA",nisn:"0129005403"},
+{no:393,nama:"ZAKIRA THALITA ZAHWA",nisn:"3135299323"},
+{no:394,nama:"ZAKIYYA AZ ZAHRA",nisn:"0134213523"},
+{no:395,nama:"ZASKIA LAILI SAFNA",nisn:"3121202885"},
+{no:396,nama:"ZIDAN PRATAMA",nisn:"3131593974"}
+];
+
+/* ================= DATA CALON ================= */
+const dataCalon = [
+{id:1,nama:"Maisya Putri Aureliya & Aldi Putra Nuryansyah",foto:"https://iili.io/nuttszx.png",singkat:"Calon 1"},
+{id:2,nama:"Hafka Azryan Ufara & Shobuna Yumna Kamaratih",foto:"https://iili.io/nuDJJaV.png",singkat:"Calon 2"},
+{id:3,nama:"Septia Chika Callista P & Erlyta Najwa Salsabila",foto:"https://iili.io/nuDKmn1.png",singkat:"Calon 3"}
+];
+
+/* ================= STATE ================= */
+let suara = {1:0, 2:0, 3:0};
+let sudahMemilih = [];
+let pemilihSaatIni = null;
+let pilihanSaatIni = null;
+
+try {
+    const s = localStorage.getItem('suaraOSIS');
+    if (s) suara = JSON.parse(s);
+    const m = localStorage.getItem('sudahMemilihOSIS');
+    if (m) sudahMemilih = JSON.parse(m);
+} catch(e) { console.log('localStorage tidak tersedia:', e); }
+
+/* ================= NAVIGASI ================= */
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+
+    if (pageId === 'page-voting') renderPilihan();
+    else if (pageId === 'page-rekapan') renderRekapan();
+    else if (pageId === 'page-verifikasi') {
+        document.getElementById('inputNISN').value = '';
+        document.getElementById('pesanError').innerText = '';
+        setTimeout(() => document.getElementById('inputNISN').focus(), 100);
+    } else if (pageId === 'page-login-panitia') {
+        document.getElementById('inputPassword').value = '';
+        document.getElementById('pesanErrorPanitia').innerText = '';
+        setTimeout(() => document.getElementById('inputPassword').focus(), 100);
+    }
+}
+
+/* ================= VERIFIKASI NISN ================= */
+function verifikasiNISN() {
+    const nisn = document.getElementById('inputNISN').value.trim();
+    const pesanError = document.getElementById('pesanError');
+
+    if (!nisn) {
+        pesanError.innerText = '⚠️ Silakan masukkan NISN terlebih dahulu.';
+        return;
+    }
+
+    const siswa = dataSiswa.find(s => s.nisn.trim() === nisn);
+
+    if (!siswa) {
+        pesanError.innerText = '❌ NISN tidak ditemukan. Periksa kembali.';
+        return;
+    }
+
+    if (sudahMemilih.includes(nisn)) {
+        pesanError.innerText = '⚠️ NISN ini sudah melakukan pemilihan.';
+        return;
+    }
+
+    pemilihSaatIni = siswa;
+    pilihanSaatIni = null;
+    pesanError.innerText = '';
+
+    document.getElementById('infoPemilih').innerText = `Pemilih: ${siswa.nama} (${siswa.nisn})`;
+    showPage('page-voting');
+}
+
+/* ================= RENDER PILIHAN ================= */
+function renderPilihan() {
+    const grid = document.getElementById('pilihanGrid');
+    grid.innerHTML = '';
+
+    dataCalon.forEach(calon => {
+        const card = document.createElement('div');
+        card.className = 'pilihan-card';
+        if (pilihanSaatIni === calon.id) card.classList.add('selected');
+
+        card.innerHTML = `
+            <img src="${calon.foto}" alt="${calon.singkat}">
+            <div class="nama-singkat">${calon.singkat}</div>
+            <div class="nama-lengkap">${calon.nama}</div>
+        `;
+
+        card.addEventListener('click', function() {
+            pilihanSaatIni = calon.id;
+            renderPilihan();
+            document.getElementById('btnKirimSuara').disabled = false;
+        });
+
+        grid.appendChild(card);
+    });
+
+    document.getElementById('btnKirimSuara').disabled = (pilihanSaatIni === null);
+}
+
+/* ================= KIRIM SUARA ================= */
+function kirimSuara() {
+    if (!pemilihSaatIni) { tampilkanNotif('❌','Error','Pemilih tidak terdeteksi. Silakan verifikasi ulang.'); return; }
+    if (pilihanSaatIni === null) { tampilkanNotif('⚠️','Belum Memilih','Silakan pilih salah satu calon terlebih dahulu.'); return; }
+
+    suara[pilihanSaatIni] = (suara[pilihanSaatIni] || 0) + 1;
+    sudahMemilih.push(pemilihSaatIni.nisn);
+
+    try {
+        localStorage.setItem('suaraOSIS', JSON.stringify(suara));
+        localStorage.setItem('sudahMemilihOSIS', JSON.stringify(sudahMemilih));
+    } catch(e) { console.log('Gagal simpan:', e); }
+
+    const namaPemilih = pemilihSaatIni.nama;
+    pemilihSaatIni = null;
+    pilihanSaatIni = null;
+
+    tampilkanSukses(namaPemilih);
+}
+
+/* ================= NOTIFIKASI SUKSES ================= */
+function tampilkanSukses(nama) {
+    const overlay = document.getElementById('overlay');
+    const alertBox = document.getElementById('alertSukses');
+    const pesan = document.getElementById('alertPesan');
+
+    pesan.innerText = `Terima kasih, ${nama}! Suara Anda telah tersimpan.`;
+    overlay.classList.add('show');
+    alertBox.classList.add('show');
+
+    setTimeout(() => {
+        overlay.classList.remove('show');
+        alertBox.classList.remove('show');
+        showPage('page-verifikasi');
+    }, 2000);
+}
+
+/* ================= BATAL ================= */
+function batalVoting() {
+    pemilihSaatIni = null;
+    pilihanSaatIni = null;
+    showPage('page-identitas');
+}
+
+/* ================= LOGIN PANITIA ================= */
+function loginPanitia() {
+    const pass = document.getElementById('inputPassword').value;
+    const pesanError = document.getElementById('pesanErrorPanitia');
+
+    if (pass === PASSWORD_PANITIA) {
+        pesanError.innerText = '';
+        showPage('page-rekapan');
+    } else {
+        pesanError.innerText = '❌ Password salah!';
+        document.getElementById('inputPassword').value = '';
+        document.getElementById('inputPassword').focus();
+    }
+}
+
+/* ================= LOGOUT PANITIA ================= */
+function logoutPanitia() {
+    showPage('page-identitas');
+    tampilkanNotif('🚪','Logout Berhasil','Anda telah keluar dari mode panitia.');
+}
+
+/* ================= REKAPAN ================= */
+function renderRekapan() {
+    const box = document.getElementById('rekapanBox');
+    const totalSuara = (suara[1]||0) + (suara[2]||0) + (suara[3]||0);
+
+    let html = '';
+    dataCalon.forEach(calon => {
+        const jumlah = suara[calon.id] || 0;
+        const persen = totalSuara > 0 ? ((jumlah / totalSuara) * 100).toFixed(1) : '0.0';
+        html += `
+            <div class="rekapan-item">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="rekapan-nama">${calon.singkat} — ${calon.nama}</span>
+                    <span class="rekapan-persentase">${persen}%</span>
+                </div>
+                <div style="font-size:.9rem; color:#6a7a9a; margin:6px 0;">${jumlah} suara</div>
+                <div class="progress-bar"><div class="progress-fill" style="width:${persen}%;"></div></div>
+            </div>
+        `;
+    });
+    html += `<div class="total-suara">Total Suara Masuk: ${totalSuara} / ${dataSiswa.length} siswa</div>`;
+    html += `<div class="total-suara" style="font-size:1rem; color:#4a5a7a;">Siswa belum memilih: ${dataSiswa.length - sudahMemilih.length}</div>`;
+    box.innerHTML = html;
+}
+
+/* ================= RESET DATA (PAKAI MODAL) ================= */
+function resetData() {
+    document.getElementById('modalReset').classList.add('show');
+}
+
+function tutupModalReset() {
+    document.getElementById('modalReset').classList.remove('show');
+}
+
+function konfirmasiReset() {
+    // Reset data
+    suara = {1:0, 2:0, 3:0};
+    sudahMemilih = [];
+    pemilihSaatIni = null;
+    pilihanSaatIni = null;
+
+    try {
+        localStorage.removeItem('suaraOSIS');
+        localStorage.removeItem('sudahMemilihOSIS');
+    } catch(e) { console.log('localStorage error:', e); }
+
+    renderRekapan();
+    tutupModalReset();
+    tampilkanNotif('✅','Data Direset','Semua data pemilihan telah berhasil dihapus.');
+}
+
+/* ================= NOTIFIKASI MODAL ================= */
+function tampilkanNotif(icon, judul, pesan) {
+    document.getElementById('notifIcon').innerText = icon;
+    document.getElementById('notifJudul').innerText = judul;
+    document.getElementById('notifPesan').innerText = pesan;
+    document.getElementById('modalNotif').classList.add('show');
+}
+
+function tutupModalNotif() {
+    document.getElementById('modalNotif').classList.remove('show');
+}
+
+/* ================= INIT ================= */
+document.addEventListener('DOMContentLoaded', function() {
+    const inp = document.getElementById('inputNISN');
+    if (inp) {
+        inp.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') verifikasiNISN();
+        });
+    }
+
+    const inpPass = document.getElementById('inputPassword');
+    if (inpPass) {
+        inpPass.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') loginPanitia();
+        });
+    }
+
+    console.log('✅ Portal OSIS siap. Total siswa:', dataSiswa.length);
+    console.log('🔐 Password panitia: ' + PASSWORD_PANITIA);
+});
+</script>
+
+</body>
+</html>
